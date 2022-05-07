@@ -558,9 +558,7 @@ WRITE16_MEMBER(namcos2_state::dpram_word_w)
 		{
 			switch( offset )
 			{
-			case 0xc0/2: //GollyGhostUpdateDiorama_c0(data);
-				/* Fill in diorama info when ready */		
-			break;
+			case 0xc0/2: GollyGhostUpdateDiorama_c0(data); break;
 			case 0xc2/2:
 				/* unknown; 0x00 or 0x01 - probably lights up guns */
 			break;
