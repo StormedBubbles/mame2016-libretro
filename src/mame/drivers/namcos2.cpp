@@ -554,6 +554,24 @@ WRITE16_MEMBER(namcos2_state::dpram_word_w)
 				break;
 			}
 		}
+		if( m_gametype==NAMCOS2_BUBBLE_TROUBLE )
+		{
+			switch( offset )
+			{
+			case 0xc0/2: //GollyGhostUpdateDiorama_c0(data);
+				/* Fill in diorama info when ready */		
+			break;
+			case 0xc2/2:
+				/* unknown; 0x00 or 0x01 - probably lights up guns */
+			break;
+			case 0xc4/2: GollyGhostUpdateLED_c4(data); break;
+			case 0xc6/2: GollyGhostUpdateLED_c6(data); break;
+			case 0xc8/2: GollyGhostUpdateLED_c8(data); break;
+			case 0xca/2: GollyGhostUpdateLED_ca(data); break;
+			default:
+				break;
+			}
+		}
 		/* Note:  Outputs for the other gun games pass through here as well, but I couldn't find the offsets. */
 		/* Steel Gunner 1 & 2 have 6 "damage lamps" (three on each side) as well as gun recoils. */
 
