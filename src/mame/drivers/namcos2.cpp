@@ -527,6 +527,36 @@ void namcos2_state::GollyGhostUpdateDiorama_c0( int data )
 	}
 }
 
+void namcos2_state::BubbleTroubleUpdateDiorama_c0( int data )
+{
+	if (data & 0x80)
+	{
+		output().set_value("undersea", 1); /* diorama is lit up */
+
+		/* diorama controller; solenoids control physical components */
+		output().set_value("shell",   (data >> 0) & 1);
+		output().set_value("ship",    (data >> 1) & 1);
+		output().set_value("trapdoor",(data >> 2) & 1);
+		output().set_value("chest",   (data >> 3) & 1);
+		//output().set_value("porch", (data >> 4) & 1); /* appears to be unused */
+		/* gun recoils */
+		output().set_value("Player1_Gun_Recoil",(data & 0x20)>>5);
+		output().set_value("Player2_Gun_Recoil",(data & 0x40)>>6);
+
+	}
+	else
+	{
+		output().set_value("undersea",0);
+		output().set_value("shell", 0);
+		output().set_value("ship", 0);
+		output().set_value("trapdoor", 0);
+		output().set_value("chest", 0);
+		//output().set_value("porch", 0); /* appears to be unused */
+		output().set_value("Player1_Gun_Recoil",0);
+		output().set_value("Player2_Gun_Recoil",0);
+	}
+}
+
 READ16_MEMBER(namcos2_state::dpram_word_r)
 {
 	return m_dpram[offset];
@@ -558,7 +588,7 @@ WRITE16_MEMBER(namcos2_state::dpram_word_w)
 		{
 			switch( offset )
 			{
-			case 0xc0/2: GollyGhostUpdateDiorama_c0(data); break;
+			case 0xc0/2: BubbleTroubleUpdateDiorama_c0(data); break;
 			case 0xc2/2:
 				/* unknown; 0x00 or 0x01 - probably lights up guns */
 			break;
