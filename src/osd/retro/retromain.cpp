@@ -531,45 +531,38 @@ static void initInput(running_machine &machine)
    char defname[20];
 
    //MOUSE
-   if (mouse_mode == 1)
+   for(i=0;i<4;i++)
    {
-      for(i=0;i<4;i++)
+      sprintf(defname, "Mouse%d", i);
+      mouse_device[i]=machine.input().device_class(DEVICE_CLASS_MOUSE).add_device(defname);
+      // add the axes
+      input_device_item_add_mouse (i , "X", &mouseLX[i], ITEM_ID_XAXIS, generic_axis_get_state);
+      input_device_item_add_mouse (i , "Y", &mouseLY[i], ITEM_ID_YAXIS, generic_axis_get_state);
+      // add the buttons
+      for (button = 0; button < 4; button++)
       {
-         sprintf(defname, "Mouse%d", i);
-         mouse_device[i]=machine.input().device_class(DEVICE_CLASS_MOUSE).add_device(defname);
-         // add the axes
-         input_device_item_add_mouse (i , "X", &mouseLX[i], ITEM_ID_XAXIS, generic_axis_get_state);
-         input_device_item_add_mouse (i , "Y", &mouseLY[i], ITEM_ID_YAXIS, generic_axis_get_state);
-         // add the buttons
-         for (button = 0; button < 4; button++)
-         {
-            input_item_id itemid = (input_item_id) (ITEM_ID_BUTTON1+button);
-            sprintf(defname, "B%d", button + 1);
-            input_device_item_add_mouse(i, defname, &mousestate[i].mouseBUT[button], itemid, generic_button_get_state);
-         }
+         input_item_id itemid = (input_item_id) (ITEM_ID_BUTTON1+button);
+         sprintf(defname, "B%d", button + 1);
+         input_device_item_add_mouse(i, defname, &mousestate[i].mouseBUT[button], itemid, generic_button_get_state);
       }
    }
 	      
    //LIGHTGUN
-   if (mouse_mode == 2)
+   for(i=0;i<4;i++)
    {
-      for(i=0;i<4;i++)
+      sprintf(defname, "Gun%d", i);
+      lightgun_device[i]=machine.input().device_class(DEVICE_CLASS_LIGHTGUN).add_device(defname);
+      // add the axes
+      input_device_item_add_lightgun (i , "X", &lightgunLX[i], ITEM_ID_XAXIS, generic_axis_get_state);
+      input_device_item_add_lightgun (i , "Y", &lightgunLY[i], ITEM_ID_YAXIS, generic_axis_get_state);
+      // add the buttons
+      for (button = 0; button < 4; button++)
       {
-         sprintf(defname, "Gun%d", i);
-         lightgun_device[i]=machine.input().device_class(DEVICE_CLASS_LIGHTGUN).add_device(defname);
-         // add the axes
-         input_device_item_add_lightgun (i , "X", &lightgunLX[i], ITEM_ID_XAXIS, generic_axis_get_state);
-         input_device_item_add_lightgun (i , "Y", &lightgunLY[i], ITEM_ID_YAXIS, generic_axis_get_state);
-         // add the buttons
-         for (button = 0; button < 4; button++)
-         {
-            input_item_id itemid = (input_item_id) (ITEM_ID_BUTTON1+button);
-            sprintf(defname, "B%d", button + 1);
-            input_device_item_add_lightgun(i, defname, &lightgunstate[i].lightgunBUT[button], itemid, generic_button_get_state);
-         }
+         input_item_id itemid = (input_item_id) (ITEM_ID_BUTTON1+button);
+         sprintf(defname, "B%d", button + 1);
+         input_device_item_add_lightgun(i, defname, &lightgunstate[i].lightgunBUT[button], itemid, generic_button_get_state);
       }
    }
-
 
    //KEYBOARD
    retrokbd_device = machine.input().device_class(DEVICE_CLASS_KEYBOARD).add_device("Retrokdb");
