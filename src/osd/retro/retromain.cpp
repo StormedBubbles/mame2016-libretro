@@ -1319,25 +1319,6 @@ static void Set_Default_Option(void)
    else
       Add_Option("-nocheat");
 
-   if(mouse_mode == 0)
-   {
-      Add_Option("-nomouse");
-      Add_Option("-nolightgun");
-   }
-   if(mouse_mode == 1)
-   {
-      Add_Option("-mouse");
-      Add_Option("-multimouse");
-      Add_Option("-nolightgun");
-   }
-   if(mouse_mode == 2)
-   {
-      Add_Option("-nomouse");
-      Add_Option("-multimouse");
-      Add_Option("-lightgun");
-   }
-
-
    if(hide_gameinfo)
       Add_Option("-skip_gameinfo");
    else
@@ -1682,6 +1663,8 @@ static int execute_game_cmd(char* path)
    Set_Default_Option();
 
    Add_Option("-mouse");
+   Add_Option("-multimouse");
+   Add_Option("-lightgun");
 
    Set_Path_Option();
 
