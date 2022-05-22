@@ -102,6 +102,7 @@ bool nobuffer_enable = false;
 
 bool hide_gameinfo = false;
 int mouse_mode = 0;
+int reload_mode = 1;
 bool cheats_enable = false;
 bool alternate_renderer = false;
 bool boot_to_osd_enable = false;
@@ -489,26 +490,26 @@ void process_lightgun_state(void)
       gun_2[i] = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_A );
 
       if(gb1[i]==0 && gun_1[i])
-	  {
-	     gb1[i]=1;
-	     lightgunstate[i].lightgunBUT[0] = 0x80;	  
-	  }
+      {
+	 gb1[i]=1;
+	 lightgunstate[i].lightgunBUT[0] = 0x80;	  
+      }
       else if(gb1[i]==1 && !gun_1[i])
-	  {
-	     lightgunstate[i].lightgunBUT[0] = 0;	
-	     gb1[i]=0;
-	  }
+      {
+	 lightgunstate[i].lightgunBUT[0] = 0;	
+	 gb1[i]=0;
+      }
 
       if(gb2[i]==0 && gun_2[i])
-	  {
-	     gb2[i]=1;
-	     lightgunstate[i].lightgunBUT[1] = 0x80;	  
-	  }
+      {
+	 gb2[i]=1;
+	 lightgunstate[i].lightgunBUT[1] = 0x80;	  
+      }
       else if(gb2[i]==1 && !gun_2[i])
-	  {
-	     lightgunstate[i].lightgunBUT[1] = 0;	
-	     gb2[i]=0;
-	  }
+      {
+	 lightgunstate[i].lightgunBUT[1] = 0;	
+	 gb2[i]=0;
+      }
 
       lightgun_x[i] = input_state_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X);
       lightgun_y[i] = input_state_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y);
@@ -516,12 +517,41 @@ void process_lightgun_state(void)
       lightgunLX[i] = lightgun_x[i]*2;;
       lightgunLY[i] = lightgun_y[i]*2;;
 
-      //Place the cursor at screen top left when detected as offscreen or when Gun Reload input activated
+      //Optionally place the cursor at corner of screen when detected as offscreen or when Gun Reload input activated
+      int offx[4];
+      int offy[4];
+
+      if (reload_mode == 1)
+      {
+	  offx[i] = -65534;
+	  offy[i] = -65534;
+      }
+      else if (reload_mode == 2)
+      {
+	  offx[i] = -65534;
+	  offy[i] = 65534;
+      }
+      else if (reload_mode == 3)
+      {
+	  offx[i] = 65534;
+	  offy[i] = 65534;
+      }
+      else if (reload_mode == 4)
+      {
+	  offx[i] = 65534;
+	  offy[i] = -65534;
+      }
+      else
+      {
+	  offx[i] = lightgun_x[i]*2;
+	  offy[i] = lightgun_y[i]*2;
+      }
+	   
       if (input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ) || input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD ) )
-	  {
-	     lightgunLX[i] = -65534;
-	     lightgunLY[i] = -65534; 
-	  }
+      {
+	  lightgunLX[i] = offx[i];
+	  lightgunLY[i] = offy[i]; 
+      }
    }
 }
 

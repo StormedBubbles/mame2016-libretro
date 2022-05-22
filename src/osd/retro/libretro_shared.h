@@ -31,6 +31,7 @@ extern int retro_pause;
 extern bool experimental_cmdline;
 extern bool hide_gameinfo;
 extern int mouse_mode;
+extern int reload_mode;
 extern bool cheats_enable;
 extern bool alternate_renderer;
 extern bool boot_to_osd_enable;
