@@ -102,7 +102,7 @@ bool nobuffer_enable = false;
 
 bool hide_gameinfo = false;
 int mouse_mode = 0;
-int reload_mode = 1;
+int reload_mode = 0;
 bool cheats_enable = false;
 bool alternate_renderer = false;
 bool boot_to_osd_enable = false;
@@ -517,40 +517,36 @@ void process_lightgun_state(void)
       lightgunLX[i] = lightgun_x[i]*2;;
       lightgunLY[i] = lightgun_y[i]*2;;
 
-      //Optionally place the cursor at corner of screen when detected as offscreen or when Gun Reload input activated
-      int offx[4];
-      int offy[4];
-
-      if (reload_mode == 1)
+      //Place the cursor at a corner of the screen designated by "Lightgun offscreen position" when the cursor touches a min/max value
+      if (input_state_cb( j, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ))
       {
-	  offx[i] = -65534;
-	  offy[i] = -65534;
-      }
-      else if (reload_mode == 2)
-      {
-	  offx[i] = -65534;
-	  offy[i] = 65534;
-      }
-      else if (reload_mode == 3)
-      {
-	  offx[i] = 65534;
-	  offy[i] = 65534;
-      }
-      else if (reload_mode == 4)
-      {
-	  offx[i] = 65534;
-	  offy[i] = -65534;
-      }
-      else
-      {
-	  offx[i] = lightgun_x[i]*2;
-	  offy[i] = lightgun_y[i]*2;
+         if (lightgun_offscreen_mode == 1)
+	 {
+	    lightgunX[j] = -65535;
+	    lightgunY[j] = -65535;
+         }
+	 else if (lightgun_offscreen_mode == 2)
+	 {
+	    lightgunX[j] = 65535;
+	    lightgunY[j] = 65535;
+	 }
       }
 	   
-      if (input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ) || input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD ) )
+      //The LIGHTGUN_RELOAD input will fire a shot at the bottom-right corner if "Lightgun offscreen position" is set to "fixed (bottom right)"
+      //That same input will fire a shot at the top-left corner otherwise
+      //The reload feature of some games fails at the top-left corner
+      if (input_state_cb( j, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD ) )
       {
-	  lightgunLX[i] = offx[i];
-	  lightgunLY[i] = offy[i]; 
+         if (lightgun_offscreen_mode == 2)
+         {
+	    lightgunX[j] = 65535;
+	    lightgunY[j] = 65535;
+         }
+	 else
+	 {
+	    lightgunX[j] = -65535;
+	    lightgunY[j] = -65535;
+	 }
       }
    }
 }

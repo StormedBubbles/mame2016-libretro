@@ -165,7 +165,7 @@ void retro_set_environment(retro_environment_t cb)
     { option_saves, "Save state naming; game|system" },
     { option_auto_save, "Auto save/load states; disabled|enabled" },
     { option_mouse, "XY device (Restart); none|lightgun|mouse" },
-    { option_reload, "Lightgun forced offscreen position; top left (default)|bottom left|bottom right|top right|none (breaks Gun Reload input)" },
+    { option_reload, "Lightgun offscreen position; free|fixed (top left)|fixed (bottom right)" },
     { option_throttle, "Enable throttle; disabled|enabled" },
     { option_cheats, "Enable cheats; disabled|enabled" },
     { option_overclock, "Main CPU Overclock; default|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|35|36|37|38|39|40|41|42|43|44|45|46|47|48|49|50|51|52|53|54|55|60|65|70|75|80|85|90|95|100|105|110|115|120|125|130|135|140|145|150" },
@@ -228,16 +228,12 @@ static void check_variables(void)
 	
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
-      if (!strcmp(var.value, "top left (default)"))
+      if (!strcmp(var.value, "free"))
+         reload_mode = 0;
+      if (!strcmp(var.value, "fixed (top left)"))
          reload_mode = 1;
-      if (!strcmp(var.value, "bottom left"))
+      if (!strcmp(var.value, "fixed (bottom right)"))
          reload_mode = 2;
-      if (!strcmp(var.value, "bottom right"))
-         reload_mode = 3;
-      if (!strcmp(var.value, "top right"))
-         reload_mode = 4;
-      if (!strcmp(var.value, "none (breaks Gun Reload input)"))
-         reload_mode = 5;
    }
 
    var.key   = option_throttle;
