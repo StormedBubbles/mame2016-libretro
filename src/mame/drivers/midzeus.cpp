@@ -522,8 +522,8 @@ WRITE32_MEMBER(midzeus_state::invasn_gun_w)
 				{ "GUNX1", "GUNY1" },
 				{ "GUNX2", "GUNY2" }
 			};
-			gun_x[player] = ioport(names[player][0])->read() * visarea.width() / 255 + visarea.min_x + BEAM_XOFFS;
-			gun_y[player] = ioport(names[player][1])->read() * visarea.height() / 255 + visarea.min_y;
+			gun_x[player] = ioport(names[player][0])->read() * visarea.width() / 255 + (0.0127 * visarea.width()) + visarea.min_x + BEAM_XOFFS;
+			gun_y[player] = ioport(names[player][1])->read() * visarea.height() / 255 + (0.0354 * visarea.height()) + visarea.min_y;
 			gun_timer[player]->adjust(m_screen->time_until_pos(MAX(0, gun_y[player] - BEAM_DY), MAX(0, gun_x[player] - BEAM_DX)), player);
 		}
 	}
@@ -822,16 +822,16 @@ static INPUT_PORTS_START( invasn )
 	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("GUNX1")     /* fake analog X */
-	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(50) PORT_KEYDELTA(10)
+	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0, 0) PORT_SENSITIVITY(50) PORT_KEYDELTA(10)
 
 	PORT_START("GUNY1")     /* fake analog Y */
-	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, 1.0, 0.0, 0) PORT_SENSITIVITY(70) PORT_KEYDELTA(10)
+	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, 1.0, 0, 0) PORT_SENSITIVITY(70) PORT_KEYDELTA(10)
 
 	PORT_START("GUNX2")     /* fake analog X */
-	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_PLAYER(2)
+	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0, 0) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_PLAYER(2)
 
 	PORT_START("GUNY2")     /* fake analog Y */
-	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, 1.0, 0.0, 0) PORT_SENSITIVITY(70) PORT_KEYDELTA(10) PORT_PLAYER(2)
+	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, 1.0, 0, 0) PORT_SENSITIVITY(70) PORT_KEYDELTA(10) PORT_PLAYER(2)
 INPUT_PORTS_END
 
 
