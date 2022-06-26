@@ -103,6 +103,7 @@ bool nobuffer_enable = false;
 bool hide_gameinfo = false;
 int mouse_mode = 0;
 int reload_mode = 0;
+int lightgun_hack;
 bool cheats_enable = false;
 bool alternate_renderer = false;
 bool boot_to_osd_enable = false;
@@ -514,8 +515,22 @@ void process_lightgun_state(void)
       lightgun_x[i] = input_state_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X);
       lightgun_y[i] = input_state_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y);
 
-      lightgunLX[i] = lightgun_x[i]*2;;
-      lightgunLY[i] = lightgun_y[i]*2;;
+      lightgunLX[i] = lightgun_x[i]*2;
+      lightgunLY[i] = lightgun_y[i]*2;
+
+      if (lightgun_hack == 1)
+      {
+         lightgunLX[i] = lightgun_x[i]*2.131;
+	 lightgunLY[i] = lightgun_y[i]*2;
+      }
+
+      if (lightgun_hack == 2)
+      {
+         lightgunLX[0] = (lightgun_x[0]*2.25) * 2.1 - 72771;
+	 lightgunLY[0] = (lightgun_y[0]*2.38) * 2.13 - 75573;
+         lightgunLX[1] = (lightgun_x[1]*2.25) * 2.1 + 89394;
+	 lightgunLY[1] = (lightgun_y[1]*2.38) * 2.13 - 75573;
+      }
 
       //Place the cursor at a corner of the screen designated by "Lightgun offscreen position" when the cursor touches a min/max value
       if (input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ))
@@ -695,6 +710,13 @@ static void Input_Binding(running_machine &machine)
    Buttons_mapping[3]=RETROPAD_Y;
    Buttons_mapping[4]=RETROPAD_L;
    Buttons_mapping[5]=RETROPAD_R;
+
+   if ( !core_stricmp(machine.system().name, "blueshrk") || !core_stricmp(machine.system().parent, "blueshrk") )
+   lightgun_hack = 1;
+   else if ( !core_stricmp(machine.system().name, "ppsatan") || !core_stricmp(machine.system().parent, "ppsatan") )
+   lightgun_hack = 2;
+   else
+   lightgun_hack = 0;
 
    if (
          !core_stricmp(machine.system().name, "tekken")    ||
