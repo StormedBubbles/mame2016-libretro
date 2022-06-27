@@ -478,9 +478,11 @@ void process_lightgun_state(void)
 
    for(i = 0;i < 4; i++)
    {
-      static int gb1[4] = {0}, gb2[4] = {0};
+      static int gb1[4] = {0}, gb2[4] = {0}, gb3[4] = {0}, gb4[4] = {0};
       int gun_1[4];
       int gun_2[4];
+      int gun_3[4];
+      int gun_4[4];
       int16_t lightgun_x[4];
       int16_t lightgun_y[4];
 
@@ -489,6 +491,8 @@ void process_lightgun_state(void)
 
       gun_1[i] = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_TRIGGER ) || input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD );
       gun_2[i] = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_A );
+      gun_3[i] = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_B );
+      gun_4[i] = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_C );
 
       if(gb1[i]==0 && gun_1[i])
       {
@@ -510,6 +514,28 @@ void process_lightgun_state(void)
       {
 	 lightgunstate[i].lightgunBUT[1] = 0;	
 	 gb2[i]=0;
+      }
+
+      if(gb3[i]==0 && gun_3[i])
+      {
+	 gb3[i]=1;
+	 lightgunstate[i].lightgunBUT[2] = 0x80;	  
+      }
+      else if(gb3[i]==1 && !gun_3[i])
+      {
+	 lightgunstate[i].lightgunBUT[2] = 0;	
+	 gb3[i]=0;
+      }
+
+      if(gb4[i]==0 && gun_4[i])
+      {
+	 gb4[i]=1;
+	 lightgunstate[i].lightgunBUT[3] = 0x80;	  
+      }
+      else if(gb4[i]==1 && !gun_4[i])
+      {
+	 lightgunstate[i].lightgunBUT[3] = 0;	
+	 gb4[i]=0;
       }
 
       lightgun_x[i] = input_state_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X);
