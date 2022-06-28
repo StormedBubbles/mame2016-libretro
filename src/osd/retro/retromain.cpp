@@ -558,6 +558,20 @@ void process_lightgun_state(void)
 	 lightgunLY[1] = (lightgun_y[1]*2.38) * 2.13 - 75573;
       }
 
+      if (lightgun_hack == 3) //playch10 (pc_duckh/pc_hgaly/pc_wgnmn)
+	      		      //GUNCODE_1 = single screen
+	      		      //GUNCODE_2 = stacked
+	      		      //GUNCODE_3 = side by side
+	      		      //Use lightgun device in port 1 for all cases. Just change rom.cfg to corresponding GUNCODE
+      {
+         lightgunLX[0] = lightgun_x[0]*2;
+	 lightgunLY[0] = lightgun_y[0]*2;
+         lightgunLX[1] = lightgun_x[0]*2;
+	 lightgunLY[1] = lightgun_y[0]*4 - 65534;
+         lightgunLX[2] = lightgun_x[0]*4 - 65534;
+	 lightgunLY[2] = lightgun_y[0]*2;
+      }
+
       //Place the cursor at a corner of the screen designated by "Lightgun offscreen position" when the cursor touches a min/max value
       if (input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ))
       {
@@ -741,6 +755,11 @@ static void Input_Binding(running_machine &machine)
    lightgun_hack = 1;
    else if ( !core_stricmp(machine.system().name, "ppsatan") || !core_stricmp(machine.system().parent, "ppsatan") )
    lightgun_hack = 2;
+   else if ( !core_stricmp(machine.system().name, "pc_duckh") || !core_stricmp(machine.system().parent, "pc_duckh") 
+	     || !core_stricmp(machine.system().name, "pc_hgaly") || !core_stricmp(machine.system().parent, "pc_hgaly")
+	     || !core_stricmp(machine.system().name, "pc_wgnmn") || !core_stricmp(machine.system().parent, "pc_wgnmn")
+	   )
+   lightgun_hack = 3;
    else
    lightgun_hack = 0;
 
