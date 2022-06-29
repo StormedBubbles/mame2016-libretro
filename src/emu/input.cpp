@@ -2350,7 +2350,7 @@ INT32 input_device_absolute_item::read_as_absolute(input_item_modifier modifier)
 {
 	// start with the current value
 	INT32 result = m_device.apply_deadzone_and_saturation(update_value());
-	assert(result >= INPUT_ABSOLUTE_MIN && result <= INPUT_ABSOLUTE_MAX);
+	//assert(result >= INPUT_ABSOLUTE_MIN && result <= INPUT_ABSOLUTE_MAX);
 
 	// if we're doing a lightgun reload hack, override the value
 	if (m_device.devclass() == DEVICE_CLASS_LIGHTGUN && m_device.lightgun_reload_button())
