@@ -578,6 +578,12 @@ void process_lightgun_state(void)
 	 lightgunLY[i] = lightgun_y[i]*2.0706 - 1414;
       }
 
+      if (lightgun_hack == 5) //claybust
+      {
+         lightgunLX[i] = lightgun_x[i]*2.0317 - 1046;
+	 lightgunLY[i] = lightgun_y[i]*2;
+      }
+
       //Place the cursor at a corner of the screen designated by "Lightgun offscreen position" when the cursor touches a min/max value
       if (input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ))
       {
@@ -768,6 +774,8 @@ static void Input_Binding(running_machine &machine)
    lightgun_hack = 3;
    else if ( !core_stricmp(machine.system().name, "borntofi") || !core_stricmp(machine.system().parent, "borntofi") )
    lightgun_hack = 4;
+   else if ( !core_stricmp(machine.system().name, "claybust") || !core_stricmp(machine.system().parent, "claybust") )
+   lightgun_hack = 5;
    else
    lightgun_hack = 0;
 
