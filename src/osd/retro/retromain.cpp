@@ -540,52 +540,60 @@ void process_lightgun_state(void)
 
       lightgun_x[i] = input_state_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X);
       lightgun_y[i] = input_state_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y);
-
-      lightgunLX[i] = lightgun_x[i]*2;
-      lightgunLY[i] = lightgun_y[i]*2;
+      int lightgun_x_s[4], lightgun_y_s[4];
 
       if (lightgun_hack == 1) //blueshrk
       {
-         lightgunLX[i] = lightgun_x[i]*2.131;
-	 lightgunLY[i] = lightgun_y[i]*2;
+         lightgun_x_s[i] = lightgun_x[i]*2.131;
+	 lightgun_y_s[i] = lightgun_y[i]*2;
       }
-
-      if (lightgun_hack == 2) //ppsatan
+      else if (lightgun_hack == 2) //ppsatan
       {
-         lightgunLX[0] = (lightgun_x[0]*2.25) * 2.1 - 72771;
-	 lightgunLY[0] = (lightgun_y[0]*2.38) * 2.13 - 75573;
-         lightgunLX[1] = (lightgun_x[1]*2.25) * 2.1 + 89394;
-	 lightgunLY[1] = (lightgun_y[1]*2.38) * 2.13 - 75573;
+         lightgun_x_s[0] = (lightgun_x[0]*2.25) * 2.1 - 72771;
+	 lightgun_y_s[0] = (lightgun_y[0]*2.38) * 2.13 - 75573;
+         lightgun_x_s[1] = (lightgun_x[1]*2.25) * 2.1 + 89394;
+	 lightgun_y_s[1] = (lightgun_y[1]*2.38) * 2.13 - 75573;
+         lightgun_x_s[2] = lightgun_x[2]*2;
+         lightgun_y_s[2] = lightgun_y[2]*2;
+         lightgun_x_s[3] = lightgun_x[3]*2;
+         lightgun_y_s[3] = lightgun_y[3]*2;
       }
-
-      if (lightgun_hack == 3) //playch10 (pc_duckh/pc_hgaly/pc_wgnmn)
+      else if (lightgun_hack == 3) //playch10 (pc_duckh/pc_hgaly/pc_wgnmn)
 	      		      //GUNCODE_1 = single screen
 	      		      //GUNCODE_2 = stacked
 	      		      //GUNCODE_3 = side by side
 	      		      //Use lightgun device in port 1 for all cases. Just change rom.cfg to corresponding GUNCODE
       {
-         lightgunLX[0] = lightgun_x[0]*2;
-	 lightgunLY[0] = lightgun_y[0]*2;
-         lightgunLX[1] = lightgun_x[0]*2;
-	 lightgunLY[1] = lightgun_y[0]*4 - 65534;
-         lightgunLX[2] = lightgun_x[0]*4 - 65534;
-	 lightgunLY[2] = lightgun_y[0]*2;
+         lightgun_x_s[0] = lightgun_x[0]*2;
+	 lightgun_y_s[0] = lightgun_y[0]*2;
+         lightgun_x_s[1] = lightgun_x[0]*2;
+	 lightgun_y_s[1] = lightgun_y[0]*4 - 65534;
+         lightgun_x_s[2] = lightgun_x[0]*4 - 65534;
+	 lightgun_y_s[2] = lightgun_y[0]*2;
+         lightgun_x_s[3] = lightgun_x[0]*2;
+         lightgun_y_s[3] = lightgun_y[0]*2;
       }
-
-      if (lightgun_hack == 4) //borntofi
+      else if (lightgun_hack == 4) //borntofi
       {
-         lightgunLX[i] = lightgun_x[i]*2;
-	 lightgunLY[i] = lightgun_y[i]*2.0706 - 1414;
+         lightgun_x_s[i] = lightgun_x[i]*2;
+	 lightgun_y_s[i] = lightgun_y[i]*2.0706 - 1414;
       }
-
-      if (lightgun_hack == 5) //claybust
+      else if (lightgun_hack == 5) //claybust
       {
-         lightgunLX[i] = lightgun_x[i]*2.0317 - 1046;
-	 lightgunLY[i] = lightgun_y[i]*2;
+         lightgun_x_s[i] = lightgun_x[i]*2.0317 - 1046;
+	 lightgun_y_s[i] = lightgun_y[i]*2;
+      }
+      else
+      {
+         lightgun_x_s[i] = lightgun_x[i]*2;
+         lightgun_y_s[i] = lightgun_y[i]*2;
       }
 
       //Place the cursor at a corner of the screen designated by "Lightgun offscreen position" when the cursor touches a min/max value
-      if (input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ))
+      //The LIGHTGUN_RELOAD input will fire a shot at the bottom-right corner if "Lightgun offscreen position" is set to "fixed (bottom right)"
+      //That same input will fire a shot at the top-left corner otherwise
+      //The reload feature of some games fails at the top-left corner
+      if (input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ) && !input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD ))
       {
          if (reload_mode == 1)
 	 {
@@ -597,12 +605,13 @@ void process_lightgun_state(void)
 	    lightgunLX[i] = 65535;
 	    lightgunLY[i] = 65535;
 	 }
+	 else
+	 {
+	    lightgunLX[i] = lightgun_x_s[i];
+	    lightgunLY[i] = lightgun_y_s[i];
+	 }
       }
-	   
-      //The LIGHTGUN_RELOAD input will fire a shot at the bottom-right corner if "Lightgun offscreen position" is set to "fixed (bottom right)"
-      //That same input will fire a shot at the top-left corner otherwise
-      //The reload feature of some games fails at the top-left corner
-      if (input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD ) )
+      else if (input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ) && input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD ))
       {
          if (reload_mode == 2)
          {
@@ -614,6 +623,24 @@ void process_lightgun_state(void)
 	    lightgunLX[i] = -65535;
 	    lightgunLY[i] = -65535;
 	 }
+      }
+      else if (!input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN ) && input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD ))
+      {
+         if (reload_mode == 2)
+         {
+	    lightgunLX[i] = 65535;
+	    lightgunLY[i] = 65535;
+         }
+	 else
+	 {
+	    lightgunLX[i] = -65535;
+	    lightgunLY[i] = -65535;
+	 }
+      }
+      else
+      {
+	 lightgunLX[i] = lightgun_x_s[i];
+	 lightgunLY[i] = lightgun_y_s[i];
       }
    }
 }
