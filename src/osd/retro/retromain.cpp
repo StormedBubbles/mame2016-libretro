@@ -68,7 +68,7 @@ typedef struct mousestate_t
 
 typedef struct lightgunstate_t
 {
-   int lightgunBUT[4];
+   int lightgunBUT[10];
 }Lightgunstate;
 
 /* rendering target */
@@ -478,11 +478,17 @@ void process_lightgun_state(void)
 
    for(i = 0;i < 4; i++)
    {
-      static int gb1[4] = {0}, gb2[4] = {0}, gb3[4] = {0}, gb4[4] = {0};
+      static int gb1[4] = {0}, gb2[4] = {0}, gb3[4] = {0}, gb4[4] = {0}, gb5[4] = {0}, gb6[4] = {0}, gb7[4] = {0}, gb8[4] = {0}, gb9[4] = {0}, gb10[4] = {0};
       int gun_1[4];
       int gun_2[4];
       int gun_3[4];
       int gun_4[4];
+      int gun_5[4];
+      int gun_6[4];
+      int gun_7[4];
+      int gun_8[4];
+      int gun_9[4];
+      int gun_10[4];
       int16_t lightgun_x[4];
       int16_t lightgun_y[4];
 
@@ -493,6 +499,12 @@ void process_lightgun_state(void)
       gun_2[i] = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_A );
       gun_3[i] = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_B );
       gun_4[i] = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_C );
+      gun_5[i]  = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SELECT );
+      gun_6[i]  = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_START );
+      gun_7[i]  = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP );
+      gun_8[i]  = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN );
+      gun_9[i]  = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT );
+      gun_10[i] = input_state_cb( i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT );
 
       if(gb1[i]==0 && gun_1[i])
       {
@@ -536,6 +548,72 @@ void process_lightgun_state(void)
       {
 	 lightgunstate[i].lightgunBUT[3] = 0;	
 	 gb4[i]=0;
+      }
+
+      if(gb5[i]==0 && gun_5[i])
+      {
+	 gb5[i]=1;
+	 lightgunstate[i].lightgunBUT[4] = 0x80;	  
+      }
+      else if(gb5[i]==1 && !gun_5[i])
+      {
+	 lightgunstate[i].lightgunBUT[4] = 0;	
+	 gb5[i]=0;
+      }
+
+      if(gb6[i]==0 && gun_6[i])
+      {
+	 gb6[i]=1;
+	 lightgunstate[i].lightgunBUT[5] = 0x80;	  
+      }
+      else if(gb6[i]==1 && !gun_6[i])
+      {
+	 lightgunstate[i].lightgunBUT[5] = 0;	
+	 gb6[i]=0;
+      }
+
+      if(gb7[i]==0 && gun_7[i])
+      {
+	 gb7[i]=1;
+	 lightgunstate[i].lightgunBUT[6] = 0x80;	  
+      }
+      else if(gb7[i]==1 && !gun_7[i])
+      {
+	 lightgunstate[i].lightgunBUT[6] = 0;	
+	 gb7[i]=0;
+      }
+
+      if(gb8[i]==0 && gun_8[i])
+      {
+	 gb8[i]=1;
+	 lightgunstate[i].lightgunBUT[7] = 0x80;	  
+      }
+      else if(gb8[i]==1 && !gun_8[i])
+      {
+	 lightgunstate[i].lightgunBUT[7] = 0;	
+	 gb8[i]=0;
+      }
+
+      if(gb9[i]==0 && gun_9[i])
+      {
+	 gb9[i]=1;
+	 lightgunstate[i].lightgunBUT[8] = 0x80;	  
+      }
+      else if(gb9[i]==1 && !gun_9[i])
+      {
+	 lightgunstate[i].lightgunBUT[8] = 0;	
+	 gb9[i]=0;
+      }
+
+      if(gb10[i]==0 && gun_10[i])
+      {
+	 gb10[i]=1;
+	 lightgunstate[i].lightgunBUT[9] = 0x80;	  
+      }
+      else if(gb10[i]==1 && !gun_10[i])
+      {
+	 lightgunstate[i].lightgunBUT[9] = 0;	
+	 gb10[i]=0;
       }
 
       lightgun_x[i] = input_state_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X);
@@ -686,7 +764,7 @@ static void initInput(running_machine &machine)
          input_device_item_add_lightgun (i , "X", &lightgunLX[i], ITEM_ID_XAXIS, generic_axis_get_state);
          input_device_item_add_lightgun (i , "Y", &lightgunLY[i], ITEM_ID_YAXIS, generic_axis_get_state);
          // add the buttons
-         for (button = 0; button < 4; button++)
+         for (button = 0; button < 10; button++)
          {
             input_item_id itemid = (input_item_id) (ITEM_ID_BUTTON1+button);
             sprintf(defname, "B%d", button + 1);

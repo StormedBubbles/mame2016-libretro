@@ -51,7 +51,7 @@ extern int mouseLY[4];
 extern int mouseBUT[4];
 extern int lightgunLX[4];
 extern int lightgunLY[4];
-extern int lightgunBUT[4];
+extern int lightgunBUT[10];
 
 extern UINT16 retrokbd_state[RETROK_LAST];
 
